@@ -3,7 +3,7 @@ var express = require("express");
 var router = express.Router();
 
 // Import the model (burger.js) to use its database functions.
-var burger = require("../models/burger.js");
+var burger = require("../config/orm.js");
 var bodyParser = require('body-parser');
 var connection = require('../config/connection.js');
 
@@ -25,7 +25,7 @@ var handlebars = require('handlebars'),
 
 //Grabs all the data from the burgers table...all of the burgers! These are sorted later with Handlebars #if and #unless statements
 router.get("/", function(req, res) {
-    burger.selectAll(function(data) {
+    burger.selectAll("burgers", function(data) {
         res.render("index", { burgers: data });
     });
 
@@ -33,19 +33,31 @@ router.get("/", function(req, res) {
 
 //User can enter a new burger into the system. Default value of devoured=false, so user doesn't actually enter that
 router.post("/", function(req, res) {
-    burger.insertOne(req.body.name, function() {
+    burger.insertOne('burgers', 'name, consumed', '"' + req.body.name + '",' + req.body.consumed, function() {
         res.redirect("/");
     });
 });
 
-//Changes status of burger from devoured=false to devoured=true
 
 router.put("/:id", function(req, res) {
-    burger.updateOne(req.params.id, function() {
+    burger.updateOne("burgers", "consumed", !req.body.consumed, req.params.id, function() {
         res.redirect("/");
     });
 });
-
 
 // Export routes for server.js to use.
 module.exports = router;
+
+
+
+
+
+//Changes status of burger from devoured=false to devoured=true
+//         connection.query(queryString, [tableName, colVal, boolean, colName, condition], function(err, result) {
+
+// broken code:
+// router.put("/:id", function(req, res) {
+//     burger.updateOne(req.params.id, function() {
+//         res.redirect("/");
+//     });
+// });
