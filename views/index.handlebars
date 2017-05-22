@@ -1,0 +1,65 @@
+<h1>burgers!</h1>
+
+<h2>burgers ready to be eaten!</h2>
+
+<!-- enter a for loop, unless means that this.consumed is FALSE  -->
+<ul>
+  {{#each burgers}}
+  <!-- consumed is a category in the burgers table, this.consumed modifies 'consumed' -->
+  <!-- take each burger from get query, display it here unless consumed=true -->
+    {{#unless this.consumed}}
+      <li>
+      <!-- burgers are ordered according to their id number -->
+        {{this.name}}
+          <!-- changes the burger from being not consumed, changes the value from false to true to make them consumed -->
+        <form action="/{{this.id}}?_method=PUT" method="POST">
+          <input type="hidden" name="consumed" value="true"> 
+          <!--                        <input type="hidden" name="id" value="{{this.devoured}}"> -->
+          <!-- text becomes sleep time -->
+          <button type="submit">consume!</button>
+        </form>
+     </li>
+    {{/unless}}
+  {{/each}}
+</ul>
+
+<h2>burgers that are consumed!</h2>
+
+<ul>
+  {{#each burgers}}
+  <!-- dealing with the burgers table -->
+    {{#if this.consumed}}
+    <!-- if the burger is consumed -->
+      <li>
+      <!-- burgers are ordered according to their id number -->
+        {{this.name}}
+        <!-- when the name is clicked, change consumed from true to false -->
+        <form action="/{{this.id}}?_method=PUT" method="POST">
+          <input type="hidden" name="consumed" value="false">
+          <!-- text becomes wake up -->
+          <button type="submit">magically uneat the burger</button>
+        </form>
+
+     </li>
+    {{/if}}
+  {{/each}}
+</ul>
+
+<!-- how to add a burger -->
+<h2>Add the burger of your choice</h2>
+<!-- unsure what this means -->
+<form class="create-update-form" action="/" method="POST">
+<!-- burgers created with an id so when they are created, the go to the end of the list -->
+  <div class="form-group">
+    <label for="ca">name of burger:</label>
+    <input type="text" id="ca" name="name">
+  </div>
+<!-- give the burgers the ability to be consumed or not eaten!,  -->
+  <div class="form-group">
+    <label for="ochal">consumed?</label><br>
+    <input type="radio" name="consumed" value="1" checked> consumed!<br>
+    <input type="radio" name="consumed" value="0"> not eaten!
+  </div>
+<!-- 'add burger' button will actually add a burger -->
+  <button type="submit">Add burger</button>
+</form>
